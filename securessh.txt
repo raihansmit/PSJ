@@ -1,0 +1,7 @@
+1. Jalankan Shell Script
+2. Milih Device apa
+3. masukan file command
+4. masukan file host
+5. jika dipilih device yang dinginkan maka, menjalankan script python dengan 3 argumen
+argumen 1 berisi file command, argumen 2 berisi file host, argumen ketiga berisi command untuk
+mengganti port number ssh dengan random modul bash dan hasil nya akan dimasukan ke file_output
