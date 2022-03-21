@@ -6,11 +6,12 @@ def print_error():  # function untuk print error
     sys.exit(f'How to use : python {error} command_playbooks filehost')
 
 def main(argv):  # function utama
-    if not len(argv) == 3: # keadaan dimana jika panjang index tidak sama dengan 2 akan memanggil func print error
+    if not len(argv) == 4: # keadaan dimana jika panjang index tidak sama dengan 2 akan memanggil func print error
         print_error() 
     command = str(sys.argv[1]) # variabel untuk memanggil argumen index ke-1 atau command 
     file = str(sys.argv[2])
     command_ssh = str(sys.argv[3])
+    port_number = str(sys.argv[4])
     print(command) # variabel untuk memanggil argumen index ke-2 atau filehost
     
     host = open(file, 'r') # variable untuk memanggil atau membuka filehost agar dapat dimasukan kedalam variabel
@@ -21,16 +22,16 @@ def main(argv):  # function utama
     for cmd in command_playbooks:
         print(cmd)  
 
-    command_mikrotik = open(command_ssh, 'r')
-    for cmd_mikrotik in command_mikrotik:
-        print(cmd_mikrotik) 
+    command_device = open(command_ssh, 'r')
+    for cmd_device in command_device:
+        print(cmd_device) 
 
     client = paramiko.SSHClient() # function untuk melakukan koneksi ke client
     client.load_system_host_keys() # function untuk load host key
     client.set_missing_host_key_policy(paramiko.WarningPolicy()) # function untuk jika host key tidak ada 
-    client.connect(host_conn, username='test123', password='test123') # funtion yang mendeklarasikan credential untuk koneksi ke remote server
+    client.connect(host_conn, username='test123', password='test123', port=port_number) # funtion yang mendeklarasikan credential untuk koneksi ke remote server
     stdin, stdout, stderr = client.exec_command(cmd) # function untuk memasukan perintah yang akan di eksekusi di remote server
-    stdin = client.exec_command(cmd_mikrotik)
+    stdin = client.exec_command(cmd_device)
     for line in stdout:
         print(f'result => {line.strip()}\n') # perulangan untuk print atau stdout dari hasil remote
 

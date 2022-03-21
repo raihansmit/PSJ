@@ -26,11 +26,11 @@ command_cisco="command $random_number"
 command_hpe="command $random_number"
 
 if [ $device == 1 ]; then 
-	python3 sshremote.py $command $host $file_mikrotik 
+	python3 sshremote.py $command $host $file_mikrotik $random_number
 elif [ $device == 2 ]; then
-	python3 sshremote.py $command $host $command_cisco
+	python3 sshremote.py $command $host $command_cisco $random_number
 elif [ $device == 3 ]; then
-	python3 sshremote.py $command $host $command_hpe
+ 	python3 sshremote.py $command $host $command_hpe $random_number
 fi
 
 
