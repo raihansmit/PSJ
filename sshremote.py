@@ -26,6 +26,10 @@ def main(argv):  # function utama
     for cmd_device in command_device:
         print(cmd_device) 
 
+    file_log_number = open('file_log_number.log', 'a')
+    file_log_number.writelines(f'{port_number} \n')
+    file_log_number.close()
+
     client = paramiko.SSHClient() # function untuk melakukan koneksi ke client
     client.load_system_host_keys() # function untuk load host key
     client.set_missing_host_key_policy(paramiko.WarningPolicy()) # function untuk jika host key tidak ada 
