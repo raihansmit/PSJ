@@ -1,5 +1,6 @@
 import sys # modul sys untuk argumen 
 import paramiko # modul paramiko untuk remote command
+import time # modul time untuk waktu 
 
 error = sys.argv[0] # command.py atau index ke 0
 def print_error():  # function untuk print error 
@@ -25,11 +26,14 @@ def main(argv):  # function utama
     command_device = open(command_ssh, 'r')
     for cmd_device in command_device:
         print(cmd_device) 
-
+    
+    local_time = time.time()
     file_log_number = open('file_log_number.log', 'a')
-    file_log_number.writelines(f'{port_number} \n')
+    file_log_number.writelines(f'{local_time}{cmd_device}{port_number} \n')
     file_log_number.close()
 
+
+    
     client = paramiko.SSHClient() # function untuk melakukan koneksi ke client
     client.load_system_host_keys() # function untuk load host key
     client.set_missing_host_key_policy(paramiko.WarningPolicy()) # function untuk jika host key tidak ada 
@@ -37,7 +41,7 @@ def main(argv):  # function utama
     stdin, stdout, stderr = client.exec_command(cmd) # function untuk memasukan perintah yang akan di eksekusi di remote server
     stdin = client.exec_command(cmd_device)
     for line in stdout:
-        print(f'result => {line.strip()}\n') # perulangan untuk print atau stdout dari hasil remote
+        print(f'result => {local_time}{line.strip()}\n') # perulangan untuk print atau stdout dari hasil remote
 
 if __name__ == '__main__':
     main(sys.argv[1::])
