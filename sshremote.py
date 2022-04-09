@@ -1,6 +1,8 @@
 import sys # modul sys untuk argumen 
 import paramiko # modul paramiko untuk remote command
-import time # modul time untuk waktu 
+import time # modul time untuk waktu
+import socket # modul socket untuk cek port ssh
+
 
 error = sys.argv[0] # command.py atau index ke 0
 def print_error():  # function untuk print error 
@@ -17,9 +19,15 @@ def main(argv):  # function utama
     pwd = str(sys.argv[6])
     print(command) # variabel untuk memanggil argumen index ke-2 atau filehost
     
+    history_port = open('file_log_number.log', 'r')
+    history_port.readline()[-1]
+    for x in history_port:
+        port_history = int(x.strip())
+
     host = open(file, 'r') # variable untuk memanggil atau membuka filehost agar dapat dimasukan kedalam variabel
     for host_conn in host: # perulangan untuk iterasi file_host
         print("Connected To " + host_conn)
+    host_conn = host_conn.rstrip()
 
     command_playbooks = open(command, 'r')
     for cmd in command_playbooks:
@@ -31,15 +39,23 @@ def main(argv):  # function utama
     
     local_time = time.time()
     file_log_number = open('file_log_number.log', 'a')
-    file_log_number.writelines(f'{local_time}{cmd_device}{port_number} \n')
+    file_log_number.writelines(f'{port_number} \n')
     file_log_number.close()
 
-
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    result = sock.connect_ex((host_conn,22))
+    if result == 0:
+        print ("Port is open")
+        port_number = 22
+    else:
+        print ("Port is not open")
+        port_number = port_history
+    sock.close()
     
     client = paramiko.SSHClient() # function untuk melakukan koneksi ke client
     client.load_system_host_keys() # function untuk load host key
     client.set_missing_host_key_policy(paramiko.WarningPolicy()) # function untuk jika host key tidak ada 
-    client.connect(host_conn, username=uname, password=pwd, port=port_number) # funtion yang mendeklarasikan credential untuk koneksi ke remote server
+    client.connect(host_conn, username=uname, password=pwd, port=port_number, look_for_keys=False) # funtion yang mendeklarasikan credential untuk koneksi ke remote server
     stdin, stdout, stderr = client.exec_command(cmd) # function untuk memasukan perintah yang akan di eksekusi di remote server
     stdin = client.exec_command(cmd_device)
     for line in stdout:
