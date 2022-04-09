@@ -16,6 +16,12 @@ read command
 echo "Masukan File Host : "
 read host
 
+echo "Username :"
+read username
+
+echo "Password :"
+read password
+
 random_number=$(od -vAn -N2 -tu2 < /dev/urandom)
 
 command_mikrotik=$(echo "
@@ -59,11 +65,11 @@ command_hpe="command $random_number"
 file_hpe="file_hpe.txt"
 
 if [ $device == 1 ]; then 
-	python3 sshremote.py $command $host $file_mikrotik $random_number
+	python3 sshremote.py $command $host $file_mikrotik $random_number $username $password
 elif [ $device == 2 ]; then
-	python3 sshremote.py $command $host $file_cisco $random_number
+	python3 sshremote.py $command $host $file_cisco $random_number $username $password
 elif [ $device == 3 ]; then
- 	python3 sshremote.py $command $host $file_hpe $random_number
+ 	python3 sshremote.py $command $host $file_hpe $random_number $username $password
 fi
 
 rm $(pwd)/file_mikrotik.txt
